@@ -1,0 +1,17 @@
+{
+  "name": "personal-page-project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "browser-sync start --server --files \"*.*\""
+  },
+  "author": "tangzhiqing",
+  "license": "MIT",
+  "dependencies": {
+    "browser-sync": "^2.8.2"
+  },
+  "devDependencies": {
+    "browser-sync": "^2.10.1"
+  }
+}

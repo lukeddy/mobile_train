@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+    <title></title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0"/>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <!--Share meta end-->
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            background: #f0f0f0;
+            font-family: Arial;
+        }
+
+        .wrapper {
+            padding-top: 0px;
+            padding-bottom: 24px;
+            max-width: 750px;
+            margin: auto;
+            background: #f0f0f0;
+        }
+
+        .list-item {
+            background: #e6e6e6;
+            margin:0px 40px 30px 40px;
+            border:6px solid #fff;
+            box-shadow:-3px 0 3px rgba(0,0,0,0.2), /*左边阴影*/
+            3px 0 3px rgba(0,0,0,0.2), /*右边阴影*/
+            0 -0px 0px rgba(0,0,0,0.2), /*顶部阴影*/
+            0 8px 8px rgba(0,0,0,0.2); /*底边阴影*/
+        }
+        .list-item .photo-item{
+            display: block;
+            width:100%;
+            height:auto;
+        }
+      .clear{
+           clear:both;
+       }
+       .download-wrapper{
+            background:#222a2d;
+            height:100px;
+            width:100%;
+            position:relative;
+        }
+        .download-wrapper .logo,.download-wrapper .download{
+            display: inline-block;
+            position:absolute;
+            top:0px;
+        }
+       .download-wrapper .logo{
+           height:52px;
+           padding:24px 0px 24px 48px;
+           left:0px;
+        }
+        .download{
+            height:52px;
+            line-height:52px;
+            padding:24px;
+            background:#fff;
+            font-size:20px;
+            font-family:Arail;
+            text-align: center;
+            right:0px;
+        }
+        .download a{
+            text-decoration: none;
+            color:rgb(110,110,110);
+        }
+        .header-wrapper{
+            text-align:center;
+            padding-top:104px;
+            padding-bottom:72px;
+        }
+        .header-wrapper .header img{
+            width:80px;
+            height:80px;
+            border-radius: 40px;
+        }
+        .header-wrapper .nickname{
+            font-family: Arail;
+            font-size:18px;
+            font-weight:bold;
+            color:rgb(95,95,95);
+            margin-top:18px;
+        }
+        #statusBox{
+        	text-align: center;
+        }
+        #msgBox{
+        	text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div class="wrapper" id="main">
+    <!-- <div class="download-wrapper">
+        <div class="logo">
+            <img src="http://www.shikezhi.com/assets_v2/images/logo/logo_v1.png" alt="">
+        </div>
+        <div class="download"><a href="javascript:void(0);">点我</a></div>
+    </div> -->
+    <div class="clear"></div>
+    <div class="header-wrapper">
+         <p class="header"><img src="https://avatars2.githubusercontent.com/u/1487658?v=3&s=460" alt=""></p>
+         <p class="nickname">tangzq</p>   
+    </div>
+    <div class="list-item">
+        <img src="http://img2.zol.com.cn/product/95/20/ceSFw3e3TqLNM.jpg" class="photo-item">
+    </div>
+    <div class="list-item">
+        <img src="http://www.bz55.com/uploads/allimg/150309/139-150309101A0.jpg" class="photo-item">
+    </div>
+    <div class="list-item">
+        <img src="http://www.bz55.com/uploads/allimg/150309/139-150309101F7.jpg" class="photo-item">
+    </div>
+    <div class="list-item">
+        <img src="http://www.bz55.com/uploads/allimg/150309/139-150309101F2.jpg" class="photo-item">
+    </div>
+    <div id="statusBox"></div>
+</div>
+</body>
+</html>
+<!-- <script src="http://cdn.bootcss.com/jquery/2.1.4/jquery.min.js"></script> -->
+<script src="//cdn.bootcss.com/zepto/1.1.6/zepto.min.js"></script>
+<script>
+	 //TODO 滚动加载
+	 $(function(){
+	 	//页面滚动时加载下一页
+      $(window).scroll(function() {
+          if($(window).scrollTop() + $(window).height() >= ($(document).height() - 200)) {
+              loadingMoreImages();
+          }
+      });
+
+	 });
+
+
+
+   /**
+   *JSONP调用，使用Instagram API取得指定tag下的图片
+   *参数callURL: tag API地址
+   **/
+   function loadingMoreImages(){
+     $.ajax({
+            type: "get",
+            url: "data/images.json",
+            dataType: "json",
+            data:null,
+            beforeSend:function(){
+            	var loadingImg='<img id="loadingImg" src="images/loading.gif">';
+            	$('#msgBox').remove();
+                $('#statusBox').append(loadingImg);
+            },
+            success: function(data, textStatus){
+                //console.log(data);
+                $.each(data,function(i,imgInfo){
+                	//console.log(imgInfo.imgURL);
+                	$('#main').append(createImageHtml(imgInfo));
+                });
+                $('#loadingImg').remove();
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+            	$('#loadingImg').remove();
+            	$('#statusBox').append('<p id="msgBox">网络异常</p>');
+            }
+        });
+   }
+
+   function createImageHtml(imgInfo){
+   	  var html='<div class="list-item">';
+          html+='<img src="'+imgInfo.imgURL+'" class="photo-item">';
+          html+='</div>';
+
+      return html;
+
+   }
+
+</script>
